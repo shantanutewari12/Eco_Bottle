@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECO_BOTTLE_NEW</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .container {
+      display: flex;
+      flex-grow: 1;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .sidebar .logo {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .sidebar .logo a {
+      text-decoration: none;
+      font-size: 24px;
+      color: #fff;
+    }
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 15px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar ul li:hover {
+      background-color: #444;
+      padding-left: 10px;
+      transition: 0.3s;
+    }
+    .sidebar ul li img {
+      margin-right: 10px;
+    }
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #1e7ec8;
+      padding: 15px;
+      color: #fff;
+      display: flex;
+      justify-content: flex-end;
+    }
+    header .user-info {
+      font-size: 16px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+    .request-purchase {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .request-purchase h2 {
+      margin-bottom: 20px;
+    }
+    .filter-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .form-group {
+      flex: 1 1 200px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+    }
+    .buttons {
+      flex: 1 1 100%;
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .search-btn,
+    .reset-btn {
+      padding: 10px 15px;
+      cursor: pointer;
+      background-color: #1e7ec8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .search-btn:hover,
+    .reset-btn:hover {
+      background-color: #005b9e;
+    }
+    .rfp-table {
+      margin-top: 30px;
+      overflow-x: auto;
+    }
+    .rfp-table table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    .rfp-table th,
+    .rfp-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    .rfp-table th {
+      background-color: #f4f4f4;
+    }
+    .rfp-table td button {
+      background-color: #1e7ec8;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .rfp-table td button:hover {
+      background-color: #005b9e;
+    }
+    .create-rfp-btn {
+      padding: 10px 20px;
+      background-color: #1e7ec8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .create-rfp-btn:hover {
+      background-color: #005b9e;
+    }
+
+    .circular-image {
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+  object-fit: cover; 
+  margin-right: 10px; 
+  vertical-align: middle; 
+}
+
+.circular-image-logo {
+  width: 70px; 
+  height: 70px; 
+  border-radius: 50%; 
+  object-fit: cover; 
+  margin-right: 10px; 
+  vertical-align: middle;
+  margin-bottom: 10px;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+    @media (max-width: 768px) {
+      .filter-form {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100px;
+        padding: 10px;
+      }
+      .sidebar .logo {
+        text-align: left;
+      }
+      .sidebar ul li {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <nav class="sidebar">
+      <div class="logo">
+        <img src="data:image/png;base64,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" 
+        class="circular-image-logo">
+        <h3>ECO_BOTTLE</h3>
+      </div>
+      <ul class="menu">
+        <li><a href="#" class="bold-text">📋RFPS</a></li>
+        <li><a href="#">🌐All</a></li>
+        <li><a href="#">✔️Approved</a></li>
+        <li><a href="#">🔜Pending</a></li>
+        <li><a href="#">✖️Rejected</a></li>
+        <li><a href="#">⌛Approval Pending</a></li>
+        <li><a href="#">🛇 Cancelled</a></li>
+        <li><a href="#">📄Drafted</a></li>
+        <li><a href="#" class="bold-text">📜PRFs</a></li>
+        <li><a href="#" class="bold-text">🏷️Gate Pass</a></li>
+        <li><a href="#" class="bold-text">💳Billing</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <header>
+        <div class="user-info">
+            <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKkAAACUCAMAAADf7/luAAAAMFBMVEXk5ueutLfp6+y4vsCqsLTd4OHg4+S2u76nrrHAxcfFycva3d68wcSzuLvLz9HR1dZLOKU8AAAD4klEQVR4nO2cyXLDIAxAjVi8gOH//7bGSdM4cROQHMmZ4Z06Pb2RJcSarms0Go1Go9FoNBqNRqMhAgB01nufvMt/nhabJmUGkxkGM0/JSRvtAT4GZdSGQY3JniyyYMOsdjBqHk/lavWw53mNbDhLEoCbzP+ea2CjtOMK+Pm1aEafIQXie89MkvbsxjJRNQhnAIRC0SVbJ8kEcLrUM6uOgqblEV0TYJSKKpTm6C2qUUYVCqv+HpkRwFd7Loi0q5pq+sUE/u8P04tW/0I1sava+iRd6S2zKIw40aX+mU1R5XSBuahqh9K7oPJ2VYcWXVQ5TTGD/p8pZ6cCvOdC4BPtPCGkSs2eTRQmUkwNY/fHNNI7U76Jqu1JpmpmG1ITTVQNbKaUMWo1ZUvUNzsRb2EbUV2giSrFtqAiFtQy9eMy3d3Wq2HmMiWm6QJXnpJNuaZT32NK//psplRRtjz9otrvqZ+fazx1dVt8O7D1qK/p+12izqXYlifU+alhm59S5/yabxuFNu0zE5soRFpMGdemtM7PuTEJpETlPEIByjhl+LZQMpSY8u6f4xfSfEvoCxY7nzI9r2gH6N7Pf3iGFNXsosjyZy78C5hDiUHkkB9TVJwb539A/R76zH3A96taO6iKJOmFOlXuMR+vyn8MvVEtPjsXjWimeE0ll6NXii7LKaOFqn6j6t62ACN9Ae1Gerwi+0Av/uV/AYi9+Ve2F7oltQ+4qIcdVzOE5M4kumKfzn3NHE9QSDsAuDQF3a/oMC3RPF04b8Bia6331nUntszABmmbJxYlZ31KMX/6ZdJq1nFg1mGcYsrxPYXzIuFzcs5qfRqxLajLv/owRumUXSxj3vd526NyiKfUCd0+7WwKpuYW4jD00bPf6ru8MqlenSypwBzaRNrrizxdC3IvQl09/YvsEPznZSE9vS3CuCodP5sE4DVd8+o6f3KKZcPefAkv+6FpFtjxgO++ddWfWK5Sz0v+cR2PPpo6LkEfVY/eT/1IQK+u45F9i3yV6zVHZSv4oyvpkYMW2UA9eS7AHLGvij96qKKnt6yR1uOLmamvJ7GPNqoxNNWKB4UHQEkA/JsNFPiBlXYZvp4e2VpJR+NIVdz390xVfwfuhooj397DgJivMI34j9Q/SoDE/+0ziMeTIp6q/vGk0LfPVA5VhAeFVCofTzI3py01QaXfLidQczuVd2LyrFpRUzIj1M20uPw51iMvKb//Q36rQ6X09NKLdPx7Cgcq8Y+vVOkv/cj1pxtlplU/cvIZCq/RO2nP4le+AnP9J8ouKAvNTDeUPfY5QUEVNtTYa3EKL/7CCSgzbTTOxg9RuDPIovZyNwAAAABJRU5ErkJggg==" class="circular-image"> Harpreet Singh</p>
+          </div>          
+      </header>
+      <section class="content">
+        <div class="request-purchase">
+          <h2>Request for Purchase</h2>
+          <form class="filter-form">
+            <div class="form-group">
+              <label for="rfpNo">RFP No.</label>
+              <input type="text" id="rfpNo">
+            </div>
+            <div class="form-group">
+              <label for="initiator">Initiator</label>
+              <select id="initiator">
+                <option>Select</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="dateType">Date Type</label>
+              <select id="dateType">
+                <option>Select</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input type="date" id="startDate">
+            </div>
+            <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input type="date" id="endDate">
+            </div>
+            <div class="form-group">
+              <label for="approver">Approver</label>
+              <select id="approver">
+                <option>Select</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="costCenter">Cost Center</label>
+              <select id="costCenter">
+                <option>Select</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="operationStatus">Operation Status</label>
+              <select id="operationStatus">
+                <option>Select</option>
+              </select>
+            </div>
+            <div class="buttons">
+              <button type="button" class="search-btn">Search</button>
+              <button type="button" class="reset-btn">Reset</button>
+            </div>
+          </form>
+          <div class="rfp-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>RFP No</th>
+                  <th>Approval Date</th>
+                  <th>Creation Date</th>
+                  <th>Initiator</th>
+                  <th>Approver</th>
+                  <th>Buyer</th>
+                  <th>Cost Center</th>
+                  <th>Status</th>
+                  <th>Operation</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>202402601</td>
+                  <td>19/Sep/2024</td>
+                  <td>19/Sep/2024</td>
+                  <td>Ashish Agrwal</td>
+                  <td>Harpreet Singh</td>
+                  <td>Ashish Agrwal</td>
+                  <td>91750701</td>
+                  <td>Approved</td>
+                  <td></td>
+                  <td><button>👁 View</button></td>
+                </tr>
+                <tr>
+                  <td>202402526</td>
+                  <td>05/Sep/2024</td>
+                  <td>05/Sep/2024</td>
+                  <td>Sunita Gopalakrishnan</td>
+                  <td>Harpreet Singh</td>
+                  <td>Sunita Gopalakrishnan</td>
+                  <td>91750718</td>
+                  <td>Approved</td>
+                  <td></td>
+                  <td><button>👁 View</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <button class="create-rfp-btn">Create RFP ✙</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
